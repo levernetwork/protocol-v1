@@ -1,5 +1,16 @@
+```
+         $$|     $$\       $$$$$$$$\ $$\    $$\ $$$$$$$$\ $$$$$$$\  
+         $$\     $$ |      $$  _____|$$ |   $$ |$$  _____|$$  __$$\ 
+$$\   $$$$$$$$\  $$ |      $$ |      $$ |   $$ |$$ |      $$ |  $$ |
+$$ |  \__$$  __| $$ |      $$$$$\    \$$\  $$  |$$$$$\    $$$$$$$  |
+$$ |     $$     |$$ |      $$  __|    \$$\$$  / $$  __|   $$  __$$< 
+$$ |    \__|     $$ |      $$ |        \$$$  /  $$ |      $$ |  $$ |
+$$$$$$$$\        $$$$$$$$\ $$$$$$$$\    \$  /   $$$$$$$$\ $$ |  $$ |
+\________|       \________|\________|    \_/    \________|\__|  \__|
+``` 
+
 # [Lever Protocol](https://www.lever.network)
-Open source implementation of the Aave Decentralized Lending Pools protocol. Version 1.0
+Open source implementation of the Lever Decentralized Margin Pools protocol. Version 1.0
 &nbsp;
 ## Documentation
 For a more detailed explanation of the Lever protocol, read [docs](https://docs.lever.network)
@@ -7,8 +18,8 @@ For a more detailed explanation of the Lever protocol, read [docs](https://docs.
 ## Source Code
 Source code of the finnal production version of the protocol will be updated after auditing is complete and when Lever is ready for mainnet launch.
 &nbsp;
-## Aduit Rport
-Project code is being aduiting by Slow Mist and will release the audit report once completed.
+## Audit Report
+- [SLOMIST](https://www.lever.network/Audit-Report.pdf)
 &nbsp;
 ## Testnet Launch
 Lever is now live on the Ethereum Ropsten network and is accesible at [here](https://ropsten.lever.network)
