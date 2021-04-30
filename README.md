@@ -20,6 +20,7 @@ Source code of the finnal production version of the protocol will be updated aft
 &nbsp;
 ## Audit Report
 - [SLOMIST](https://www.lever.network/Audit-Report.pdf)
+- [CERTIK](https://www.lever.network/Lever-CertiK%20Audit%20Final%20Report%20for%20Lever.pdf)
 &nbsp;
 ## Testnet Launch
 Lever is now live on the Ethereum Ropsten network and is accesible at [here](https://ropsten.lever.network)
