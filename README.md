@@ -19,7 +19,7 @@ For a more detailed explanation of the Lever protocol, read [docs](https://docs.
 Source code of the finnal production version of the protocol will be updated after auditing is complete and when Lever is ready for mainnet launch.
 &nbsp;
 ## Audit Report
-- [SLOMIST](https://www.lever.network/Audit-Report.pdf)
+- [SLOWMIST](https://www.lever.network/Audit-Report.pdf)
 - [CERTIK](https://www.lever.network/Lever-CertiK%20Audit%20Final%20Report%20for%20Lever.pdf)
 &nbsp;
 ## Testnet Launch
