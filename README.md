@@ -19,8 +19,8 @@ For a more detailed explanation of the Lever protocol, read [docs](https://docs.
 Source code of the finnal production version of the protocol will be updated after auditing is complete and when Lever is ready for mainnet launch.
 &nbsp;
 ## Audit Report
-- [SLOWMIST](https://www.lever.network/Audit-Report.pdf)
-- [CERTIK](https://www.lever.network/Lever-CertiK%20Audit%20Final%20Report%20for%20Lever.pdf)
+- [SLOWMIST](https://lever.network/Audit-Report.pdf)
+- [CERTIK](https://lever.network/Lever-CertiK%20Audit%20Final%20Report%20for%20Lever.pdf)
 &nbsp;
 ## Testnet Launch
 Lever is now live on the Ethereum Ropsten network and is accesible at [here](https://ropsten.lever.network)
