@@ -29,6 +29,8 @@ contract MarginPoolAddressesProvider is Ownable, IMarginPoolAddressesProvider {
   bytes32 private constant LEVER_TOKEN = 'LEVER_TOKEN';
   bytes32 private constant TREASURY_ADDRESS = 'TREASURY_ADDRESS';
   bytes32 private constant REWARDS_DISTRIBUTION = 'REWARDS_DISTRIBUTION';
+  bytes32 private constant SWAP_MINER = 'SWAP_MINER';
+  bytes32 private constant ORDER_BOOK = 'ORDER_BOOK';
 
   constructor() public {
   }
@@ -85,8 +87,8 @@ contract MarginPoolAddressesProvider is Ownable, IMarginPoolAddressesProvider {
    * setting the new `pool` implementation on the first time calling it
    * @param pool The new MarginPool implementation
    **/
-  function setMarginPoolImpl(address pool,address UniswapRouter,address _weth) external override onlyOwner {
-    _updatePoolImpl(MARGIN_POOL, pool, UniswapRouter, _weth);
+  function setMarginPoolImpl(address pool,address UniswapRouter, address SushiswapRouter,address _weth) external override onlyOwner {
+    _updatePoolImpl(MARGIN_POOL, pool, UniswapRouter,SushiswapRouter, _weth);
     emit MarginPoolUpdated(pool);
   }
 
@@ -140,23 +142,14 @@ contract MarginPoolAddressesProvider is Ownable, IMarginPoolAddressesProvider {
     emit PriceOracleUpdated(priceOracle);
   }
 
-  function getLendingRateOracle() external view override returns (address) {
-    return getAddress(LENDING_RATE_ORACLE);
-    // return getAddress(LENDING_RATE_ORACLE);
-  }
-
-  function setLendingRateOracle(address lendingRateOracle) external override onlyOwner {
-    _addresses[LENDING_RATE_ORACLE] = lendingRateOracle;
-    emit LendingRateOracleUpdated(lendingRateOracle);
-  }
 
   function getLeverToken() external view override returns (address) {
     return getAddress(LEVER_TOKEN);
-    // return getAddress(LENDING_RATE_ORACLE);
   }
 
   function setLeverToken(address lever) external override onlyOwner {
     _addresses[LEVER_TOKEN] = lever;
+    emit LeverTokenUpdated(lever);
   }
   
   function getTreasuryAddress() external view override returns (address) {
@@ -165,6 +158,7 @@ contract MarginPoolAddressesProvider is Ownable, IMarginPoolAddressesProvider {
 
   function setTreasuryAddress(address treasuryAddress) external override onlyOwner {
     _addresses[TREASURY_ADDRESS] = treasuryAddress;
+    emit TreasuryAddressUpdated(treasuryAddress);
   }
   
   function getRewardsDistribution() external view override returns (address) {
@@ -173,7 +167,45 @@ contract MarginPoolAddressesProvider is Ownable, IMarginPoolAddressesProvider {
 
   function setRewardsDistribution(address rewardsDistribution) external override onlyOwner {
     _addresses[REWARDS_DISTRIBUTION] = rewardsDistribution;
+    emit RewardsDistributionUpdated(rewardsDistribution);
   }
+
+    /**
+   * @dev Returns the address of the OrderBook proxy
+   * @return The OrderBook proxy address
+   **/
+  function getOrderBook() external view override returns (address) {
+    return getAddress(ORDER_BOOK);
+  }
+
+  /**
+   * @dev Updates the implementation of the OrderBook, or creates the proxy
+   * setting the new `pool` implementation on the first time calling it
+   * @param orderBook The new OrderBook implementation
+   **/
+  function setOrderBookImpl(address orderBook, address UniswapRouter, address _weth) external override onlyOwner {
+    _updateImpl(ORDER_BOOK, orderBook, UniswapRouter, _weth);
+    emit OrderBookUpdated(orderBook);
+  }
+    /**
+   * @dev Returns the address of the SwapMiner proxy
+   * @return The SwapMiner proxy address
+   **/
+  function getSwapMiner() external view override returns (address) {
+    return getAddress(SWAP_MINER);
+  }
+
+  /**
+   * @dev Updates the implementation of the SwapMiner, or creates the proxy
+   * setting the new `pool` implementation on the first time calling it
+   * @param swapMiner The new SwapMiner implementation
+   **/
+  function setSwapMinerImpl(address swapMiner, address UniswapRouter, address _uniswapLevPairToken, address LeverUsdOracle) external override onlyOwner {
+    _updateSwapMinerImpl(SWAP_MINER, swapMiner, UniswapRouter, _uniswapLevPairToken, LeverUsdOracle);
+    emit SwapMinerUpdated(swapMiner);
+  }
+
+  
 
   /**
    * @dev Internal function to update the implementation of a specific proxied component of the protocol
@@ -210,7 +242,7 @@ contract MarginPoolAddressesProvider is Ownable, IMarginPoolAddressesProvider {
    * @param id The id of the proxy to be updated
    * @param newAddress The address of the new implementation
    **/
-  function _updatePoolImpl(bytes32 id, address newAddress, address UniswapRouter,address _weth) internal {
+  function _updateImpl(bytes32 id, address newAddress, address UniswapRouter,address _weth) internal {
     address payable proxyAddress = payable(_addresses[id]);
 
     InitializableImmutableAdminUpgradeabilityProxy proxy =
@@ -226,5 +258,48 @@ contract MarginPoolAddressesProvider is Ownable, IMarginPoolAddressesProvider {
       proxy.upgradeToAndCall(newAddress, params);
     }
   }
+    /**
+   * @dev Internal function to update the implementation of a specific proxied component of the protocol
+   * - If there is no proxy registered in the given `id`, it creates the proxy setting `newAdress`
+   *   as implementation and calls the initialize() function on the proxy
+   * - If there is already a proxy registered, it just updates the implementation to `newAddress` and
+   *   calls the initialize() function via upgradeToAndCall() in the proxy
+   * @param id The id of the proxy to be updated
+   * @param newAddress The address of the new implementation
+   **/
+  function _updatePoolImpl(bytes32 id, address newAddress, address UniswapRouter, address SushiswapRouter,address _weth) internal {
+    address payable proxyAddress = payable(_addresses[id]);
+
+    InitializableImmutableAdminUpgradeabilityProxy proxy =
+      InitializableImmutableAdminUpgradeabilityProxy(proxyAddress);
+    bytes memory params = abi.encodeWithSignature('initialize(address,address,address,address)', address(this), UniswapRouter,SushiswapRouter, _weth);
+
+    if (proxyAddress == address(0)) {
+      proxy = new InitializableImmutableAdminUpgradeabilityProxy(address(this));
+      proxy.initialize(newAddress, params);
+      _addresses[id] = address(proxy);
+      emit ProxyCreated(id, address(proxy));
+    } else {
+      proxy.upgradeToAndCall(newAddress, params);
+    }
+  }
+
+  function _updateSwapMinerImpl(bytes32 id, address newAddress, address UniswapRouter,address _uniswapLevPairToken,address LeverUsdOracle) internal {
+    address payable proxyAddress = payable(_addresses[id]);
+
+    InitializableImmutableAdminUpgradeabilityProxy proxy =
+      InitializableImmutableAdminUpgradeabilityProxy(proxyAddress);
+    bytes memory params = abi.encodeWithSignature('initialize(address,address,address,address)', address(this), UniswapRouter,_uniswapLevPairToken,LeverUsdOracle);
+
+    if (proxyAddress == address(0)) {
+      proxy = new InitializableImmutableAdminUpgradeabilityProxy(address(this));
+      proxy.initialize(newAddress, params);
+      _addresses[id] = address(proxy);
+      emit ProxyCreated(id, address(proxy));
+    } else {
+      proxy.upgradeToAndCall(newAddress, params);
+    }
+  }
+
 
 }
