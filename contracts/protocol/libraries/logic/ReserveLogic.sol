@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: agpl-3.0
 pragma solidity 0.6.12;
 
-import {SafeMath} from '../../../dependencies/openzeppelin/contracts/SafeMath.sol';
-import {IERC20} from '../../../interfaces/IERC20.sol';
-import {SafeERC20} from '../../../dependencies/openzeppelin/contracts/SafeERC20.sol';
-import {IXToken} from '../../../interfaces/IXToken.sol';
-import {IVariableDebtToken} from '../../../interfaces/IVariableDebtToken.sol';
-import {IReserveInterestRateStrategy} from '../../../interfaces/IReserveInterestRateStrategy.sol';
-import {ReserveConfiguration} from '../configuration/ReserveConfiguration.sol';
-import {MathUtils} from '../math/MathUtils.sol';
-import {WadRayMath} from '../math/WadRayMath.sol';
-import {PercentageMath} from '../math/PercentageMath.sol';
-import {Errors} from '../helpers/Errors.sol';
-import {DataTypes} from '../types/DataTypes.sol';
+import {SafeMath} from './SafeMath.sol';
+import {IERC20} from './IERC20.sol';
+import {SafeERC20} from './SafeERC20.sol';
+import {IXToken} from './IXToken.sol';
+import {IVariableDebtToken} from './IVariableDebtToken.sol';
+import {IReserveInterestRateStrategy} from './IReserveInterestRateStrategy.sol';
+import {ReserveConfiguration} from './ReserveConfiguration.sol';
+import {MathUtils} from './MathUtils.sol';
+import {WadRayMath} from './WadRayMath.sol';
+import {PercentageMath} from './PercentageMath.sol';
+import {Errors} from './Errors.sol';
+import {DataTypes} from './DataTypes.sol';
 
 /**
  * @title ReserveLogic library
