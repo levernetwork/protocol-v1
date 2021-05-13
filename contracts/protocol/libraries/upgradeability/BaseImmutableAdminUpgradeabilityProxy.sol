@@ -66,7 +66,7 @@ contract BaseImmutableAdminUpgradeabilityProxy is BaseUpgradeabilityProxy {
     ifAdmin
   {
     _upgradeTo(newImplementation);
-    (bool success, ) = newImplementation.call(data);
+    (bool success, ) = newImplementation.delegatecall(data);
     require(success, "upgradeToAndCall failed");
   }
 
