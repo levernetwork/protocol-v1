@@ -2,9 +2,8 @@
 pragma solidity 0.6.12;
 pragma experimental ABIEncoderV2;
 
-import {VariableDebtToken} from '../protocol/tokenization/VariableDebtToken.sol';
-import {LendingRateOracle} from '../misc/LendingRateOracle.sol';
-import {Ownable} from '../dependencies/openzeppelin/contracts/Ownable.sol';
+import {VariableDebtToken} from './VariableDebtToken.sol';
+import {Ownable} from './Ownable.sol';
 import {StringLib} from './StringLib.sol';
 
 contract VariableTokensHelper is Ownable {
@@ -14,7 +13,7 @@ contract VariableTokensHelper is Ownable {
 
   constructor(address payable _pool, address _addressesProvider) public {
     pool = _pool;
-    addressesProvider = _addressesProvider;   
+    addressesProvider = _addressesProvider; 
   }
 
   function initDeployment(
@@ -39,22 +38,4 @@ contract VariableTokensHelper is Ownable {
     }
   }
 
-  function setOracleBorrowRates(
-    address[] calldata assets,
-    uint256[] calldata rates,
-    address oracle
-  ) external onlyOwner {
-    require(assets.length == rates.length, 'Arrays not same length');
-
-    for (uint256 i = 0; i < assets.length; i++) {
-      // LendingRateOracle owner must be this contract
-      LendingRateOracle(oracle).setMarketBorrowRate(assets[i], rates[i]);
-    }
-  }
-
-  function setOracleOwnership(address oracle, address admin) external onlyOwner {
-    require(admin != address(0), 'owner can not be zero');
-    require(LendingRateOracle(oracle).owner() == address(this), 'helper is not owner');
-    LendingRateOracle(oracle).transferOwnership(admin);
-  }
 }
