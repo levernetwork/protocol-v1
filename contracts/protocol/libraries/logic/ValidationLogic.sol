@@ -2,19 +2,19 @@
 pragma solidity 0.6.12;
 pragma experimental ABIEncoderV2;
 
-import {SafeMath} from '../../../dependencies/openzeppelin/contracts/SafeMath.sol';
-import {IERC20} from '../../../interfaces/IERC20.sol';
+import {SafeMath} from "./SafeMath.sol";
+import {IERC20} from "./IERC20.sol";
 import {ReserveLogic} from "./ReserveLogic.sol";
 import {GenericLogic} from "./GenericLogic.sol";
-import {WadRayMath} from '../math/WadRayMath.sol';
-import {PercentageMath} from '../math/PercentageMath.sol';
-import {SafeERC20} from '../../../dependencies/openzeppelin/contracts/SafeERC20.sol';
-import {ReserveConfiguration} from '../configuration/ReserveConfiguration.sol';
-import {UserConfiguration} from '../configuration/UserConfiguration.sol';
-import {Errors} from '../helpers/Errors.sol';
-import {Helpers} from "../helpers/Helpers.sol";
-import {IReserveInterestRateStrategy} from '../../../interfaces/IReserveInterestRateStrategy.sol';
-import {DataTypes} from '../types/DataTypes.sol';
+import {WadRayMath} from "./WadRayMath.sol";
+import {PercentageMath} from "./PercentageMath.sol";
+import {SafeERC20} from "./SafeERC20.sol";
+import {ReserveConfiguration} from "./ReserveConfiguration.sol";
+import {UserConfiguration} from "./UserConfiguration.sol";
+import {Errors} from "./Errors.sol";
+import {Helpers} from "./Helpers.sol";
+import {IReserveInterestRateStrategy} from "./IReserveInterestRateStrategy.sol";
+import {DataTypes} from "./DataTypes.sol";
 
 /**
  * @title ReserveLogic library
