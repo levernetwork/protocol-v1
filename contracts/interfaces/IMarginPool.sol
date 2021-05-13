@@ -3,7 +3,7 @@ pragma solidity 0.6.12;
 pragma experimental ABIEncoderV2;
 
 import {IMarginPoolAddressesProvider} from './IMarginPoolAddressesProvider.sol';
-import {DataTypes} from '../protocol/libraries/types/DataTypes.sol';
+import {DataTypes} from './DataTypes.sol';
 
 interface IMarginPool {
   /**
@@ -15,7 +15,7 @@ interface IMarginPool {
    **/
   event Deposit(
     address indexed reserve,
-    address user,
+    address indexed user,
     address indexed onBehalfOf,
     uint256 amount
   );
@@ -39,7 +39,7 @@ interface IMarginPool {
    **/
   event Borrow(
     address indexed reserve,
-    address user,
+    address indexed user,
     address indexed onBehalfOf,
     uint256 amount,
     uint256 borrowRate
@@ -57,6 +57,22 @@ interface IMarginPool {
     address indexed user,
     address indexed repayer,
     uint256 amount
+  );
+  
+    /**
+   * @dev Emitted on swapTokensForTokens() swapTokensForClosePosition() swapWithAggregation() closeWithAggregation()
+   * @param user The address initiating the swap
+   * @param srcReserve The address of the underlying asset of the source reserve
+   * @param dstReserve The address of the underlying asset of the destination reserve
+   * @param srcAmount The amount of source reserve
+   * @param dstAmount The amount of destination reserve
+   **/
+  event Swap(
+    address indexed user,
+    address indexed srcReserve,
+    address indexed dstReserve,
+    uint256 srcAmount,
+    uint256 dstAmount
   );
 
 
@@ -195,14 +211,16 @@ interface IMarginPool {
     uint256 amountIn,
     uint256 amountOut,
     address[] calldata path,
-    bool isExactIn
+    bool isExactIn,
+    bool isUni
   ) external;
 
   function swapTokensForClosePosition(
         uint256 amountIn,
         uint256 amountOut,
         address[] calldata path,
-        bool isExactIn
+        bool isExactIn,
+        bool isUni
   ) external;
 
   /**
