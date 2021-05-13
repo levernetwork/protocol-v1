@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: agpl-3.0
 pragma solidity 0.6.12;
 
-import {IERC20} from '../../interfaces/IERC20.sol';
-import {SafeERC20} from "../../dependencies/openzeppelin/contracts/SafeERC20.sol";
-import {IMarginPool} from "../../interfaces/IMarginPool.sol";
-import {IXToken} from "../../interfaces/IXToken.sol";
-import {WadRayMath} from "../libraries/math/WadRayMath.sol";
-import {Errors} from "../libraries/helpers/Errors.sol";
+import {IERC20} from "./IERC20.sol";
+import {SafeERC20} from "./SafeERC20.sol";
+import {IMarginPool} from "./IMarginPool.sol";
+import {IXToken} from "./IXToken.sol";
+import {WadRayMath} from "./WadRayMath.sol";
+import {Errors} from "./Errors.sol";
 import {IncentivizedERC20} from "./IncentivizedERC20.sol";
-import {SafeMath} from '../../dependencies/openzeppelin/contracts/SafeMath.sol';
+import {SafeMath} from "./SafeMath.sol";
 import {
     IMarginPoolAddressesProvider
-} from "../../interfaces/IMarginPoolAddressesProvider.sol";
-import {Address} from "../../dependencies/openzeppelin/contracts/Address.sol";
+} from "./IMarginPoolAddressesProvider.sol";
+import {Address} from "./Address.sol";
 
 /**
  * @dev Standard math utilities missing in the Solidity language.
@@ -98,7 +98,7 @@ contract XToken is
     IERC20 public rewardsToken;
     uint256 public periodFinish = 0;
     uint256 public rewardRate = 0;
-    uint256 public rewardsDuration = 4 * 365 days;
+    uint256 public rewardsDuration = 30 days;
     uint256 public lastUpdateTime;
     uint256 public rewardPerTokenStored;
 
@@ -501,36 +501,40 @@ contract XToken is
 
     /* ========== RESTRICTED FUNCTIONS ========== */
 
-    function notifyRewardAmount(uint256 reward)
+    function notifyRewardAmount(uint256 reward, uint256 _rewardsDuration)
         external
         onlyRewardsDistribution
         updateReward(address(0))
     {
-        if (block.timestamp >= periodFinish) {
-            rewardRate = reward.div(rewardsDuration);
-        } else {
-            uint256 remaining = periodFinish.sub(block.timestamp);
-            uint256 leftover = remaining.mul(rewardRate);
-            rewardRate = reward.add(leftover).div(rewardsDuration);
-        }
-
         // Ensure the provided reward amount is not more than the balance in the contract.
         // This keeps the reward rate in the right range, preventing overflows due to
         // very high values of rewardRate in the earned and rewardsPerToken functions;
         // Reward + leftover must be less than 2^256 / 10^18 to avoid overflow.
         uint256 balance = rewardsToken.balanceOf(address(this));
-        require(
-            rewardRate <= balance.div(rewardsDuration),
-            "Provided reward too high"
-        );
+        if (block.timestamp >= periodFinish) {
+            rewardsDuration = _rewardsDuration;
+            rewardRate = reward.div(rewardsDuration);
+            require(
+                rewardRate <= balance.div(rewardsDuration),
+                "Provided reward too high"
+            );
+            periodFinish = block.timestamp.add(rewardsDuration);
+        } else {
+            uint256 remaining = periodFinish.sub(block.timestamp);
+            uint256 leftover = remaining.mul(rewardRate);
+            rewardRate = reward.add(leftover).div(remaining);
+            require(
+                rewardRate <= balance.div(remaining),
+                "Provided reward too high"
+            );
+        }
 
         lastUpdateTime = block.timestamp;
-        periodFinish = block.timestamp.add(rewardsDuration);
-        emit RewardAdded(reward);
+        emit RewardAdded(reward, _rewardsDuration);
     }
 
     /* ========== EVENTS ========== */
 
-    event RewardAdded(uint256 reward);
+    event RewardAdded(uint256 reward, uint256 _rewardsDuration);
     event RewardPaid(address indexed user, uint256 reward);
 }
