@@ -2,15 +2,15 @@
 pragma solidity 0.6.12;
 pragma experimental ABIEncoderV2;
 
-import {SafeMath} from '../../../dependencies/openzeppelin/contracts/SafeMath.sol';
-import {IERC20} from '../../../interfaces/IERC20.sol';
+import {SafeMath} from './SafeMath.sol';
+import {IERC20} from './IERC20.sol';
 import {ReserveLogic} from './ReserveLogic.sol';
-import {ReserveConfiguration} from '../configuration/ReserveConfiguration.sol';
-import {UserConfiguration} from '../configuration/UserConfiguration.sol';
-import {WadRayMath} from '../math/WadRayMath.sol';
-import {PercentageMath} from '../math/PercentageMath.sol';
-import {IPriceOracleGetter} from '../../../interfaces/IPriceOracleGetter.sol';
-import {DataTypes} from '../types/DataTypes.sol';
+import {ReserveConfiguration} from './ReserveConfiguration.sol';
+import {UserConfiguration} from './UserConfiguration.sol';
+import {WadRayMath} from './WadRayMath.sol';
+import {PercentageMath} from './PercentageMath.sol';
+import {IPriceOracleGetter} from './IPriceOracleGetter.sol';
+import {DataTypes} from './DataTypes.sol';
 
 /**
  * @title GenericLogic library
