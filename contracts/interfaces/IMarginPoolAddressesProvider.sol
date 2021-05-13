@@ -15,9 +15,13 @@ interface IMarginPoolAddressesProvider {
   event MarginPoolConfiguratorUpdated(address indexed newAddress);
   event MarginPoolCollateralManagerUpdated(address indexed newAddress);
   event PriceOracleUpdated(address indexed newAddress);
-  event LendingRateOracleUpdated(address indexed newAddress);
   event ProxyCreated(bytes32 id, address indexed newAddress);
   event AddressSet(bytes32 id, address indexed newAddress, bool hasProxy);
+  event LeverTokenUpdated(address indexed newAddress);
+  event TreasuryAddressUpdated(address indexed newAddress);
+  event RewardsDistributionUpdated(address indexed newAddress);
+  event OrderBookUpdated(address indexed newAddress);
+  event SwapMinerUpdated(address indexed newAddress);
 
 
   function setAddress(bytes32 id, address newAddress) external;
@@ -28,7 +32,7 @@ interface IMarginPoolAddressesProvider {
 
   function getMarginPool() external view returns (address);
 
-  function setMarginPoolImpl(address pool, address UniswapRouter, address weth) external;
+  function setMarginPoolImpl(address pool, address UniswapRouter,address SushiswapRouter, address weth) external;
 
   function getMarginPoolConfigurator() external view returns (address);
 
@@ -54,11 +58,15 @@ interface IMarginPoolAddressesProvider {
 
   function setTreasuryAddress(address treasuryAddress) external;
 
-  function getLendingRateOracle() external view returns (address);
-
-  function setLendingRateOracle(address lendingRateOracle) external;
-
   function getRewardsDistribution() external view returns (address);
 
   function setRewardsDistribution(address rewardsDistribution) external;
+
+  function getOrderBook() external view returns (address);
+
+  function setOrderBookImpl(address addressProvider, address UniswapRouter, address weth) external;
+
+  function getSwapMiner() external view returns (address);
+
+  function setSwapMinerImpl(address _swapMiner, address UniswapRouter, address _uniswapLevPairToken, address LeverUsdOracle) external;
 }
