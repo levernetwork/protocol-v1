@@ -2,15 +2,13 @@
 pragma solidity 0.6.12;
 pragma experimental ABIEncoderV2;
 
-import {MarginPool} from '../protocol/Marginpool/MarginPool.sol';
-import {MarginPoolAddressesProvider} from '../protocol/configuration/MarginPoolAddressesProvider.sol';
-import {IMarginPoolAddressesProvider} from '../interfaces/IMarginPoolAddressesProvider.sol';
-import {MarginPoolConfigurator} from '../protocol/Marginpool/MarginPoolConfigurator.sol';
-import {XToken} from '../protocol/tokenization/XToken.sol';
+import {IMarginPoolAddressesProvider} from './IMarginPoolAddressesProvider.sol';
+import {MarginPoolConfigurator} from './MarginPoolConfigurator.sol';
+import {XToken} from './XToken.sol';
 import {
   DefaultReserveInterestRateStrategy
-} from '../protocol/Marginpool/DefaultReserveInterestRateStrategy.sol';
-import {Ownable} from '../dependencies/openzeppelin/contracts/Ownable.sol';
+} from './DefaultReserveInterestRateStrategy.sol';
+import {Ownable} from './Ownable.sol';
 import {StringLib} from './StringLib.sol';
 
 contract XTokensAndRatesHelper is Ownable {
@@ -49,7 +47,7 @@ contract XTokensAndRatesHelper is Ownable {
         ),
         address(
           new DefaultReserveInterestRateStrategy(
-            MarginPoolAddressesProvider(addressesProvider),
+            IMarginPoolAddressesProvider(addressesProvider),
             rates[i][0],
             rates[i][1],
             rates[i][2],
@@ -101,7 +99,6 @@ contract XTokensAndRatesHelper is Ownable {
         liquidationBonuses[i]
       );
 
-      configurator.enableBorrowingOnReserve(assets[i]);
       configurator.setReserveFactor(assets[i], reserveFactors[i]);
     }
   }
